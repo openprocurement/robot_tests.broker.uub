@@ -1,550 +1,532 @@
 *** Settings ***
-Library  openprocurement_client_helper.py
+Library   Selenium2Screenshots
+Library   String
+Library   DateTime
+Library   Selenium2Library
+Library   Collections
+Library   uub_service.py
+
+*** Variables ***
+${locator.edit.description}                                     id=ePosition_description
+${locator.title}                                                id=tePosition_title
+${locator.description}                                          id=tePosition_description
+${locator.minimalStep.amount}                                   id=tePosition_minimalStep_amount
+${locator.value.amount}                                         id=tePosition_value_amount
+${locator.value.valueAddedTaxIncluded}                          id=cbPosition_value_valueAddedTaxIncluded
+${locator.value.currency}                                       id=tslPosition_value_currency
+${locator.enquiryPeriod.startDate}                              id=tdtpPosition_enquiryPeriod_startDate_Date
+${locator.enquiryPeriod.endDate}                                id=tdtpPosition_enquiryPeriod_endDate_Date
+${locator.tenderPeriod.startDate}                               id=tdtpPosition_tenderPeriod_startDate_Date
+${locator.tenderPeriod.endDate}                                 id=tdtpPosition_tenderPeriod_endDate_Date
+${locator.tenderId}                                             id=tPosition_tenderID
+${locator.procuringEntity.name}                                 id=tw_Org_0_PE_identifier_legalName
+
+
+${locator.items[0].quantity}                                    id=tew_item_0_quantity
+${locator.items[0].description}                                 id=tew_item_0_description
+${locator.items[0].deliveryLocation.latitude}                   id=tew_item_0_deliveryLocation_latitude
+${locator.items[0].deliveryLocation.longitude}                  id=tew_item_0_deliveryLocation_longitude
+${locator.items[0].unit.code}                                   id=tw_item_0_unit_code
+${locator.items[0].unit.name}                                   id=tslw_item_0_unit_code
+${locator.items[0].deliveryAddress.postalCode}                  id=tew_item_0_deliveryAddress_postalCode
+${locator.items[0].deliveryAddress.countryName}                 id=tew_item_0_deliveryAddress_countryName
+${locator.items[0].deliveryAddress.region}                      id=tew_item_0_deliveryAddress_region
+${locator.items[0].deliveryAddress.locality}                    id=tew_item_0_deliveryAddress_locality
+${locator.items[0].deliveryAddress.streetAddress}               id=tew_item_0_deliveryAddress_streetAddress
+${locator.items[0].deliveryDate.endDate}                        id=tdtpw_item_0_deliveryDate_endDate_Date
+${locator.items[0].classification.scheme}                       id=nw_item_0_classification_id
+${locator.items[0].classification.id}                           id=tew_item_0_classification_id
+${locator.items[0].classification.description}                  id=tw_item_0_classification_description
+${locator.items[0].additionalClassifications[0].scheme}         id=nw_item_0_additionalClassifications_id
+${locator.items[0].additionalClassifications[0].id}             id=tew_item_0_additionalClassifications_id
+${locator.items[0].additionalClassifications[0].description}    id=tw_item_0_additionalClassifications_description
+
+${locator.questions[0].title}                                   css=.qa_title
+${locator.questions[0].description}                             css=.qa_description
+${locator.questions[0].date}                                    css=.qa_question_date
+${locator.questions[0].answer}                                  css=.qa_answer
 
 
 *** Keywords ***
-Завантажити документ
-  [Arguments]  ${username}  ${filepath}  ${tender_uaid}
-  Fail  Дане ключове слово не реалізовано
-  [return]   ${reply}
+Підготувати клієнт для користувача
+  [Arguments]     @{ARGUMENTS}
+  [Documentation]  Відкрити брaвзер, створити обєкт api wrapper, тощо
+  Open Browser  ${USERS.users['${ARGUMENTS[0]}'].homepage}  ${USERS.users['${ARGUMENTS[0]}'].browser}  alias=${ARGUMENTS[0]}
+  Set Window Size       @{USERS.users['${ARGUMENTS[0]}'].size}
+  Set Window Position   @{USERS.users['${ARGUMENTS[0]}'].position}
+  Run Keyword If   '${ARGUMENTS[0]}' != 'UUB_Viewer'   Login   ${ARGUMENTS[0]}
 
+Login
+  [Arguments]  @{ARGUMENTS}
+  Input text      id=eLogin          ${USERS.users['${ARGUMENTS[0]}'].login}
+  Click Button    id=btnLogin
+  Sleep   2
 
-Отримати документ
-  [Arguments]  ${username}  ${tender_uaid}  ${url}
-  Fail  Дане ключове слово не реалізовано
-  [return]   ${contents}  ${filename}
-
-
-Отримати посилання на аукціон для глядача
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${auctionUrl}
-
-##############################################################################
-#             Tender operations
-##############################################################################
-
-Підготувати дані для оголошення тендера
-  [Documentation]  Це слово використовується в майданчиків, тому потрібно, щоб воно було і тут
-  [Arguments]  ${username}  ${tender_data}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${tender_data}
-
+Змінити користувача
+  [Arguments]  @{ARGUMENTS}
+  Go to   ${USERS.users['${ARGUMENTS[0]}'].homepage}
+  Sleep   2
+  Input text      id=eLogin          ${USERS.users['${ARGUMENTS[0]}'].login}
+  Click Button    id=btnLogin
+  Sleep   2
 
 Створити тендер
-  [Arguments]  ${username}  ${tender_data}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${tender.data.tenderID}
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} ==  username
+  ...      ${ARGUMENTS[1]} ==  tender_data
+
+    Set Global Variable      ${TENDER_INIT_DATA_LIST}         ${ARGUMENTS[1]}
+
+    ${title}=                Get From Dictionary         ${ARGUMENTS[1].data}             title
+    ${description}=          Get From Dictionary         ${ARGUMENTS[1].data}             description
+    ${items}=                Get From Dictionary         ${ARGUMENTS[1].data}             items
+    ${budget}=               get_budget                  ${ARGUMENTS[1]}
+    ${step_rate}=            get_step_rate               ${ARGUMENTS[1]}
+
+    ${currency}=                 Get From Dictionary         ${ARGUMENTS[1].data.value}       currency
+    ${valueAddedTaxIncluded}=    Get From Dictionary         ${ARGUMENTS[1].data.value}       valueAddedTaxIncluded
+
+    ${start_period_enquiry_date}=  get_tender_dates_uub          ${ARGUMENTS[1]}           StartPeriodDate
+    ${start_period_enquiry_time}=  get_tender_dates_uub          ${ARGUMENTS[1]}           StartPeriodTime
+    ${end_period_enquiry_date}=  get_tender_dates_uub          ${ARGUMENTS[1]}           EndPeriodDate
+    ${end_period_enquiry_time}=  get_tender_dates_uub          ${ARGUMENTS[1]}           EndPeriodTime
+    ${start_tender_date}=        get_tender_dates_uub          ${ARGUMENTS[1]}           StartDate
+    ${start_tender_time}=        get_tender_dates_uub          ${ARGUMENTS[1]}           StartTime
+    ${end_tender_date}=          get_tender_dates_uub          ${ARGUMENTS[1]}           EndDate
+    ${end_tender_time}=          get_tender_dates_uub          ${ARGUMENTS[1]}           EndTime
+
+    ${item0}=                Get From List               ${items}                         0
+    ${descr_lot}=            Get From Dictionary         ${item0}                         description
+    ${unit}=                 Get From Dictionary         ${items[0].unit}                 code
+    ${cpv_id}=               Get From Dictionary         ${items[0].classification}       id
+    ${dkpp_id}=              Get From Dictionary         ${items[0].additionalClassifications[0]}      id
+    ${countryName}=          Get From Dictionary         ${items[0].deliveryAddress}      countryName
+    ${postalCode}=           Get From Dictionary         ${items[0].deliveryAddress}      postalCode
+    ${region}=                   Get From Dictionary         ${items[0].deliveryAddress}      region
+    ${locality}=             Get From Dictionary         ${items[0].deliveryAddress}      locality
+    ${streetAddress}=        Get From Dictionary         ${items[0].deliveryAddress}      streetAddress
+    ${latitude}=             get_latitude                ${items[0]}
+    ${longitude}=            get_longitude               ${items[0]}
+    ${quantity}=             get_quantity                ${items[0]}
+    ${delivery_end}=             get_delivery_date_uub      ${items[0]}
 
 
-Пошук тендера по ідентифікатору
-  [Arguments]  ${username}  ${tender_uaid}
-  Fail  Дане ключове слово не реалізовано
-  [return]   ${tender}
+    Selenium2Library.Switch Browser    ${ARGUMENTS[0]}
+    Wait Until Page Contains Element     id=btAddTender    20
+    Click Element                        id=btAddTender
+    Wait Until Page Contains Element     id=ePosition_title       20
+    Input text                           id=ePosition_title                    ${title}
+    Input text                           id=ePosition_description          ${description}
+    Input text             id=ePosition_value_amount                       ${budget}
+    Click Element          id=cbPosition_value_valueAddedTaxIncluded
 
+    Input text             id=dtpPosition_enquiryPeriod_startDate_Date          ${start_period_enquiry_date}
+    Input text             id=ePosition_enquiryPeriod_startDate_Time          ${start_period_enquiry_time}
+
+    Input text             id=dtpPosition_enquiryPeriod_endDate_Date          ${end_period_enquiry_date}
+    Input text             id=ePosition_enquiryPeriod_endDate_Time          ${end_period_enquiry_time}
+    Input text             id=dtpPosition_tenderPeriod_startDate_Date          ${start_tender_date}
+    Input text             id=ePosition_tenderPeriod_startDate_Time          ${start_tender_time}
+    Input text             id=dtpPosition_tenderPeriod_endDate_Date          ${end_tender_date}
+    Input text             id=ePosition_tenderPeriod_endDate_Time          ${end_tender_time}
+    input text             id=ePosition_minimalStep_amount                         ${step_rate}
+
+    Click Element          id=btn_items_add
+     Sleep   1
+    Input text        id=ew_item_0_description               ${descr_lot}
+    Input text        id=ew_item_0_quantity                  ${quantity}
+    Select From List By Value        id=slw_item_0_unit_code                ${unit}
+    Input text        id=ew_item_0_classification_id         ${cpv_id}
+     Sleep   1
+    Click Element     xpath=(//*[@id='ui-id-1']//li//a)
+    Input text        id=ew_item_0_additionalClassifications_id                      ${dkpp_id}
+     Sleep   1
+    Click Element     xpath=(//*[@id='ui-id-2']//li//a)
+
+    Input text        id=dtpw_item_0_deliveryDate_endDate_Date          ${delivery_end}
+
+    Input text        id=ew_item_0_deliveryAddress_countryName       ${countryName}
+    Input text        id=ew_item_0_deliveryAddress_postalCode       ${postalCode}
+    Input text        id=ew_item_0_deliveryAddress_region          ${region}
+    Input text        id=ew_item_0_deliveryAddress_locality          ${locality}
+    Input text        id=ew_item_0_deliveryAddress_streetAddress    ${streetAddress}
+    Input text        id=ew_item_0_deliveryLocation_latitude          ${latitude}
+    Input text        id=ew_item_0_deliveryLocation_longitude         ${longitude}
+    Click Element      id=btnSend
+    Sleep   3
+    Wait Until Element Contains  id=ValidateTips      Збереження виконано         10
+    Click Element      id=btnPublic
+    Wait Until Element Contains  id=ValidateTips      Публікацію виконано         10
+
+    ${tender_id}=     Get Text        id=tPosition_tenderID
+    ${TENDER}=        Get Text        id=tPosition_tenderID
+    log to console      ${TENDER}
+    [return]    ${TENDER}
+
+Завантажити документ
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} ==  username
+  ...      ${ARGUMENTS[1]} ==  ${filepath}
+  ...      ${ARGUMENTS[2]} ==  ${TENDER}
+  Go to   ${USERS.users['${ARGUMENTS[0]}'].default_page}
+  Click Element    id=btFilterNumber
+  Sleep  1
+  Input Text        id=ew_fv_0_value   ${ARGUMENTS[2]}
+  Click Element     id=btnFilter
+  Sleep  2
+  CLICK ELEMENT    xpath=(//a[contains(@class, 'tender_rec')])
+  sleep  3
+  CLICK ELEMENT     id=btn_documents_add
+  Choose File       xpath=(//*[@id='diagFileUpload']/table/tbody/tr/td[2]/div/form/input[2])   ${ARGUMENTS[1]}
+  Sleep   2
+  Submit Form       upload_form
+  Capture Page Screenshot
+
+Пошук тендера за ідентифікатором
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} ==  username
+  ...      ${ARGUMENTS[1]} ==  ${TENDER}
+  Selenium2Library.Switch Browser    ${ARGUMENTS[0]}
+  Go to   ${USERS.users['${ARGUMENTS[0]}'].default_page}
+  Click Element    id=btFilterNumber
+  Sleep  1
+  Input Text      id=ew_fv_0_value   ${ARGUMENTS[1]}
+  Click Element    id=btnFilter
+  Sleep  2
+  CLICK ELEMENT    xpath=(//a[contains(@class, 'tender_rec')])
+  sleep  2
+  Capture Page Screenshot
+
+Перейти до сторінки запитань
+  Wait Until Page Contains Element   id=questions_ref
+  Click Element     id=questions_ref
+  Sleep   1
+
+Задати питання
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} ==  username
+  ...      ${ARGUMENTS[1]} ==  tenderUaId
+  ...      ${ARGUMENTS[2]} ==  questionId
+  ${title}=        Get From Dictionary  ${ARGUMENTS[2].data}  title
+  ${description}=  Get From Dictionary  ${ARGUMENTS[2].data}  description
+  Перейти до сторінки запитань
+  Click Element     id=btn_add
+  Sleep   1
+  Input text          id=e_title                 ${title}
+  Input text          id=e_description           ${description}
+  Click Element     id=SendQuestion
+  Sleep  3
+  Capture Page Screenshot
 
 Оновити сторінку з тендером
-  [Arguments]  ${username}  ${tender_uaid}
-  Fail  Дане ключове слово не реалізовано
-
+    [Arguments]    @{ARGUMENTS}
+    [Documentation]
+    ...      ${ARGUMENTS[0]} = username
+    ...      ${ARGUMENTS[1]} = ${TENDER_UAID}
+    Selenium2Library.Switch Browser    ${ARGUMENTS[0]}
+    Пошук тендера за ідентифікатором    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
 
 Отримати інформацію із тендера
-  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
-  Fail  Дане ключове слово не реалізовано
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} ==  username
+  ...      ${ARGUMENTS[1]} ==  fieldname
+  ${return_value}=  run keyword  Отримати інформацію про ${ARGUMENTS[1]}
+  [return]  ${return_value}
 
+Отримати тест із поля і показати на сторінці
+  [Arguments]   ${fieldname}
+  ${return_value}=   Get Text  ${locator.${fieldname}}
+  [return]  ${return_value}
+
+Отримати інформацію про title
+  ${return_value}=   Отримати тест із поля і показати на сторінці   title
+  [return]  ${return_value}
+
+Отримати інформацію про description
+  ${return_value}=   Отримати тест із поля і показати на сторінці   description
+  [return]  ${return_value}
+
+
+Отримати інформацію про value.amount
+  ${return_value}=   Отримати тест із поля і показати на сторінці  value.amount
+  ${return_value}=   Convert To Number   ${return_value.replace(' ', '').replace(',', '.')}
+  [return]  ${return_value}
+
+Отримати інформацію про minimalStep.amount
+  ${return_value}=   Отримати тест із поля і показати на сторінці   minimalStep.amount
+  ${return_value}=    convert to number    ${return_value.replace(',', '.')[:5]}
+  [return]   ${return_value}
 
 Внести зміни в тендер
-  [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
-  Fail  Дане ключове слово не реалізовано
-
-
-##############################################################################
-#             Item operations
-##############################################################################
-
-Додати предмет закупівлі
-  [Arguments]  ${username}  ${tender_uaid}  ${item}
-  Fail  Дане ключове слово не реалізовано
-
-
-Отримати інформацію із предмету
-  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${field_name}
-  Fail  Дане ключове слово не реалізовано
-
-
-Видалити предмет закупівлі
-  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${lot_id}=${Empty}
-  Fail  Дане ключове слово не реалізовано
-
-##############################################################################
-#             Lot operations
-##############################################################################
-
-Створити лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Отримати інформацію із лоту
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${field_name}
-  Fail  Дане ключове слово не реалізовано
-
-
-Змінити лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}   ${fieldname}  ${fieldvalue}
-  Fail  Дане ключове слово не реалізовано
-
-  [return]  ${reply}
-
-
-Додати предмет закупівлі в лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${item}
-  Fail  Дане ключове слово не реалізовано
-
-
-
-Завантажити документ в лот
-  [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${lot_id}
-  Fail  Дане ключове слово не реалізовано
-  [return]   ${reply}
-
-
-Видалити лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Скасувати лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${cancellation_reason}  ${document}  ${new_description}
-  Fail  Дане ключове слово не реалізовано
-
-
-##############################################################################
-#             Feature operations
-##############################################################################
-
-Додати неціновий показник на тендер
-  [Arguments]  ${username}  ${tender_uaid}  ${feature}
-  Fail  Дане ключове слово не реалізовано
-
-
-Додати неціновий показник на предмет
-  [Arguments]  ${username}  ${tender_uaid}  ${feature}  ${item_id}
-  Fail  Дане ключове слово не реалізовано
-
-
-Додати неціновий показник на лот
-  [Arguments]  ${username}  ${tender_uaid}  ${feature}  ${lot_id}
-  Fail  Дане ключове слово не реалізовано
-
-
-Отримати інформацію із нецінового показника
-  [Arguments]  ${username}  ${tender_uaid}  ${feature_id}  ${field_name}
-  Fail  Дане ключове слово не реалізовано
-
-
-Видалити неціновий показник
-  [Arguments]  ${username}  ${tender_uaid}  ${feature_id}  ${obj_id}=${Empty}
-  Fail  Дане ключове слово не реалізовано
-
-##############################################################################
-#             Questions
-##############################################################################
-
-Задати запитання на предмет
-  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${question}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Задати запитання на лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${question}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Задати запитання на тендер
-  [Arguments]  ${username}  ${tender_uaid}  ${question}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Отримати інформацію із запитання
-  [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
-  Fail  Дане ключове слово не реалізовано
-
-
-Відповісти на запитання
-  [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${question_id}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-##############################################################################
-#             Claims
-##############################################################################
-
-Створити чернетку вимоги про виправлення умов закупівлі
-  [Documentation]  Створює вимогу у статусі "draft"
-  [Arguments]  ${username}  ${tender_uaid}  ${claim}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${complaintID}
-
-
-Створити чернетку вимоги про виправлення умов лоту
-  [Documentation]  Створює вимогу у статусі "draft"
-  [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${lot_index}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply.data.complaintID}
-
-
-Створити чернетку вимоги про виправлення визначення переможця
-  [Documentation]  Створює вимогу у статусі "draft"
-  [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${award_index}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply.data.complaintID}
-
-
-Створити вимогу про виправлення умов закупівлі
-  [Documentation]  Створює вимогу у статусі "claim"
-  ...      Можна створити вимогу як з документацією, так і без неї
-  [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${document}=${None}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${complaintID}
-
-
-Створити вимогу про виправлення умов лоту
-  [Documentation]  Створює вимогу у статусі "claim"
-  ...      Можна створити вимогу як з документацією, так і без неї
-  ...      Якщо lot_index == None, то створюється вимога про виправлення умов тендера.
-  [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${lot_index}  ${document}=${None}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${complaintID}
-
-
-Створити вимогу про виправлення визначення переможця
-  [Documentation]  Створює вимогу у статусі "claim"
-  ...      Можна створити вимогу як з документацією, так і без неї
-  [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${award_index}  ${document}=${None}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${complaintID}
-
-
-Завантажити документацію до вимоги
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${document}
-  Fail  Дане ключове слово не реалізовано
-
-
-Завантажити документацію до вимоги про виправлення визначення переможця
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${award_index}  ${document}
-  Fail  Дане ключове слово не реалізовано
-
-
-Подати вимогу
-  [Documentation]  Переводить вимогу зі статусу "draft" у статус "claim"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Подати вимогу про виправлення визначення переможця
-  [Documentation]  Переводить вимогу зі статусу "draft" у статус "claim"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${award_index}  ${confirmation_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Відповісти на вимогу про виправлення умов закупівлі
-  [Documentation]  Переводить вимогу зі статусу "claim" у статус "answered"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Відповісти на вимогу про виправлення умов лоту
-  [Documentation]  Переводить вимогу зі статусу "claim" у статус "answered"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Відповісти на вимогу про виправлення визначення переможця
-  [Documentation]  Переводить вимогу зі статусу "claim" у статус "answered"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}  ${award_index}
-  Fail  Дане ключове слово не реалізовано
-
-
-Підтвердити вирішення вимоги про виправлення умов закупівлі
-  [Documentation]  Переводить вимогу зі статусу "answered" у статус "resolved"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Підтвердити вирішення вимоги про виправлення умов лоту
-  [Documentation]  Переводить вимогу зі статусу "answered" у статус "resolved"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Підтвердити вирішення вимоги про виправлення визначення переможця
-  [Documentation]  Переводить вимогу зі статусу "answered" у статус "resolved"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}  ${award_index}
-  Fail  Дане ключове слово не реалізовано
-
-
-Скасувати вимогу про виправлення умов закупівлі
-  [Documentation]  Переводить вимогу в статус "canceled"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${cancellation_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Скасувати вимогу про виправлення умов лоту
-  [Documentation]  Переводить вимогу в статус "canceled"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${cancellation_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Скасувати вимогу про виправлення визначення переможця
-  [Documentation]  Переводить вимогу в статус "canceled"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${cancellation_data}  ${award_index}
-  Fail  Дане ключове слово не реалізовано
-
-
-Перетворити вимогу про виправлення умов закупівлі в скаргу
-  [Documentation]  Переводить вимогу у статус "pending"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${escalating_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Перетворити вимогу про виправлення умов лоту в скаргу
-  [Documentation]  Переводить вимогу у статус "pending"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${escalating_data}
-  Fail  Дане ключове слово не реалізовано
-
-
-Перетворити вимогу про виправлення визначення переможця в скаргу
-  [Documentation]  Переводить вимогу у статус "pending"
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${escalating_data}  ${award_index}
-  Fail  Дане ключове слово не реалізовано
-
-##############################################################################
-#             Bid operations
-##############################################################################
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} =  username
+  ...      ${ARGUMENTS[1]} =  ${TENDER_UAID}
+  ...      ${ARGUMENTS[2]} ==  fieldname
+  ...      ${ARGUMENTS[3]} ==  fieldvalue
+  Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+  Wait Until Page Contains Element   ${locator.edit.${ARGUMENTS[2]}}   5
+  Input Text       ${locator.edit.${ARGUMENTS[2]}}   ${ARGUMENTS[3]}
+  Click Element      id=btnPublic
+  Wait Until Element Contains  id=ValidateTips      Публікацію виконано        5
+  Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+  ${result_field}=  Get Value   ${locator.edit.${ARGUMENTS[2]}}
+  Should Be Equal   ${result_field}   ${ARGUMENTS[3]}
+
+
+Отримати інформацію про items[0].quantity
+  ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].quantity
+  ${return_value}=    Convert To Number   ${return_value.split(' ')[0]}
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].unit.code
+  ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].unit.code
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].unit.name
+  ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].unit.name
+  [return]   ${return_value}
+
+Отримати інформацію про value.currency
+  ${return_value}=   Get Selected List Value        slPosition_value_currency
+  [return]  ${return_value}
+
+Отримати інформацію про value.valueAddedTaxIncluded
+  ${return_value}=   is_checked                     cbPosition_value_valueAddedTaxIncluded
+  [return]  ${return_value}
+
+Отримати інформацію про tenderId
+  ${return_value}=   Отримати тест із поля і показати на сторінці   tenderId
+  [return]  ${return_value}
+
+Отримати інформацію про procuringEntity.name
+  ${return_value}=   Отримати тест із поля і показати на сторінці   procuringEntity.name
+   Fail  Поле заповнюється за реєстраційною карткою Учасника
+
+Отримати інформацію про items[0].deliveryLocation.latitude
+  ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].deliveryLocation.latitude
+  ${return_value}=   convert to number   ${return_value.replace(' ', '').replace(',', '.')}
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].deliveryLocation.longitude
+  ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].deliveryLocation.longitude
+  ${return_value}=   convert to number    ${return_value.replace(' ', '').replace(',', '.')}
+  [return]  ${return_value}
+
+Отримати інформацію про tenderPeriod.startDate
+  ${date_value}=   Get Text  tdtpPosition_tenderPeriod_startDate_Date
+  ${time_value}=   Get Text  tePosition_tenderPeriod_startDate_Time
+  ${return_value}=    convert_uub_date_to_iso    ${date_value}   ${time_value}
+  [return]    ${return_value}
+
+Отримати інформацію про tenderPeriod.endDate
+  ${date_value}=   Get Text  tdtpPosition_tenderPeriod_endDate_Date
+  ${time_value}=   Get Text  tePosition_tenderPeriod_endDate_Time
+  ${return_value}=    convert_uub_date_to_iso    ${date_value}   ${time_value}
+  [return]    ${return_value}
+
+Отримати інформацію про enquiryPeriod.startDate
+  ${date_value}=   Get Text  tdtpPosition_enquiryPeriod_startDate_Date
+  ${time_value}=   Get Text  tePosition_enquiryPeriod_startDate_Time
+  ${return_value}=    convert_uub_date_to_iso    ${date_value}   ${time_value}
+  [return]  ${return_value}
+
+Отримати інформацію про enquiryPeriod.endDate
+  ${date_value}=   Get Text  tdtpPosition_enquiryPeriod_endDate_Date
+  ${time_value}=   Get Text  tePosition_enquiryPeriod_endDate_Time
+  ${return_value}=    convert_uub_date_to_iso    ${date_value}   ${time_value}
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].description
+  ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].description
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].classification.id
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].classification.id
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].classification.scheme
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].classification.scheme
+  ${return_value}=   get_scheme_uub  ${return_value}
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].classification.description
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].classification.description
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].additionalClassifications[0].id
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].additionalClassifications[0].id
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].additionalClassifications[0].scheme
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].additionalClassifications[0].scheme
+  ${return_value}=   get_scheme_uub  ${return_value}
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].additionalClassifications[0].description
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].additionalClassifications[0].description
+  [return]  ${return_value}
+
+Отримати інформацію про items[0].deliveryAddress.countryName
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryAddress.countryName
+  [return]   ${return_value}
+
+Отримати інформацію про items[0].deliveryAddress.postalCode
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryAddress.postalCode
+  [return]   ${return_value}
+
+Отримати інформацію про items[0].deliveryAddress.region
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryAddress.region
+  [return]   ${return_value}
+
+Отримати інформацію про items[0].deliveryAddress.locality
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryAddress.locality
+  [return]   ${return_value}
+
+Отримати інформацію про items[0].deliveryAddress.streetAddress
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryAddress.streetAddress
+  [return]   ${return_value}
+
+Отримати інформацію про items[0].deliveryDate.endDate
+  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryDate.endDate
+  [return]  ${return_value}
+
+Отримати інформацію про questions[0].title
+  Click Element                       id=questions_ref
+  sleep   2
+  ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].title
+  [return]  ${return_value}
+
+Отримати інформацію про questions[0].description
+  ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].description
+  [return]  ${return_value}
+
+Отримати інформацію про questions[0].date
+  ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].date
+  [return]  ${return_value}
+
+Отримати інформацію про questions[0].answer
+  ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].answer
+  [return]  ${return_value}
+
+Відповісти на питання
+  [Arguments]  @{ARGUMENTS}
+  [Documentation]
+  ...      ${ARGUMENTS[0]} = username
+  ...      ${ARGUMENTS[1]} = ${TENDER_UAID}
+  ...      ${ARGUMENTS[2]} = 0
+  ...      ${ARGUMENTS[3]} = answer_data
+  ${answer}=     Get From Dictionary  ${ARGUMENTS[3].data}  answer
+  Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+  Перейти до сторінки запитань
+  Wait Until Page Contains Element      css=.bt_addAnswer
+  Click Element                         css=.bt_addAnswer:first-child
+  Input Text                            id=e_answer        ${answer}
+  Click Element                         id=SendAnswer
+  sleep   1
+  Capture Page Screenshot
 
 Подати цінову пропозицію
-  [Arguments]  ${username}  ${tender_uaid}  ${bid}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Змінити цінову пропозицію
-  [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
-  Fail  Дане ключове слово не реалізовано
-  [return]   ${reply}
-
+    [Arguments]  @{ARGUMENTS}
+    [Documentation]
+    ...    ${ARGUMENTS[0]} ==  username
+    ...    ${ARGUMENTS[1]} ==  tenderId
+    ...    ${ARGUMENTS[2]} ==  ${test_bid_data}
+    ${amount}=    Get From Dictionary     ${ARGUMENTS[2].data.value}    amount
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Wait Until Page Contains Element          id=btnBid    5
+    Click Element       id=btnBid
+    Sleep   1
+    Wait Until Page Contains Element          id=eBid_price    5
+    Input Text          id=eBid_price         ${amount}
+    Capture Page Screenshot
+    Click Element       id=btn_public
+    sleep   1
+    ${resp}=    Get Value      id=eBid_price
+    [return]    ${resp}
 
 Скасувати цінову пропозицію
-  [Arguments]  ${username}  ${tender_uaid}
-  Fail  Дане ключове слово не реалізовано
-  [return]   ${reply}
+    [Arguments]  @{ARGUMENTS}
+    [Documentation]
+    ...    ${ARGUMENTS[0]} ==  username
+    ...    ${ARGUMENTS[1]} ==  tenderId
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Wait Until Page Contains Element   id=btnShowBid    5
+    Click Element       id=btnShowBid
+    Sleep   1
+    Wait Until Page Contains Element   id=btn_delete    5
+    Click Element       id=btn_delete
 
+Змінити цінову пропозицію
+    [Arguments]  @{ARGUMENTS}
+    [Documentation]
+    ...    ${ARGUMENTS[0]} ==  username
+    ...    ${ARGUMENTS[1]} ==  tenderId
+    ...    ${ARGUMENTS[2]} ==  amount
+    ...    ${ARGUMENTS[3]} ==  amount.value
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Wait Until Page Contains Element   id=btnShowBid    5
+    Click Element       id=btnShowBid
+    Sleep   1
+    Wait Until Page Contains Element          id=eBid_price    5
+    Input Text              id=eBid_price         ${ARGUMENTS[3]}
+    sleep   1
+    Click Element       id=btn_public
 
 Завантажити документ в ставку
-  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_type}=documents
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${uploaded_file}
-
+    [Arguments]  @{ARGUMENTS}
+    [Documentation]
+    ...    ${ARGUMENTS[1]} ==  file
+    ...    ${ARGUMENTS[2]} ==  tenderId
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[2]}
+    Wait Until Page Contains Element   id=btnShowBid    5
+    Click Element       id=btnShowBid
+    Sleep   1
+    Wait Until Page Contains Element          id=btn_documents_add    5
+    CLICK ELEMENT     id=btn_documents_add
+    Choose File       xpath=(//*[@id='diagFileUpload']/table/tbody/tr/td[2]/div/form/input[2])   ${ARGUMENTS[1]}
+    Sleep   2
+    Submit Form       upload_form
 
 Змінити документ в ставці
-  [Arguments]  ${username}  ${path}  ${docid}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${uploaded_file}
+    [Arguments]  @{ARGUMENTS}
+    [Documentation]
+    ...    ${ARGUMENTS[0]} ==  username
+    ...    ${ARGUMENTS[1]} ==  file
+    ...    ${ARGUMENTS[2]} ==  tenderId
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[2]}
+    Wait Until Page Contains Element   id=btnShowBid    5
+    Click Element       id=btnShowBid
+    Sleep   1
+    CLICK ELEMENT     css=.bt_ReUpload:first-child
+    Choose File       xpath=(//*[@id='diagFileUpload']/table/tbody/tr/td[2]/div/form/input[2])   ${ARGUMENTS[1]}
+    Sleep   2
+    Submit Form       upload_form
 
+Отримати інформацію про bids
+    [Arguments]  @{ARGUMENTS}
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Click Element                       id=bids_ref
 
-Змінити документацію в ставці
-  [Arguments]  ${username}  ${doc_data}  ${docid}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Отримати пропозицію
-  [Arguments]  ${username}  ${tender_uaid}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${reply}
-
-
-Отримати інформацію із пропозиції
-  [Arguments]  ${username}  ${tender_uaid}  ${field}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${bid.data.${field}}
-
+Отримати посилання на аукціон для глядача
+    [Arguments]  @{ARGUMENTS}
+    Selenium2Library.Switch Browser       ${ARGUMENTS[0]}
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Sleep   60
+    reload page
+    ${result} =    get text    id=aPosition_auctionUrl
+    [return]   ${result}
 
 Отримати посилання на аукціон для учасника
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}=${Empty}
-  Fail  Дане ключове слово не реалізовано
-  [return]  ${participationUrl}
-
-##############################################################################
-#             Qualification operations
-##############################################################################
-
-Завантажити документ рішення кваліфікаційної комісії
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, qualification number and document to upload
-  ...      [Description] Find tender using uaid,  and call upload_qualification_document
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${document}  ${tender_uaid}  ${award_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${doc}
-
-
-Підтвердити постачальника
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and number of the award to confirm
-  ...      Find tender using uaid, create dict with confirmation data and call patch_award
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-  Fail  Дане ключове слово не реалізовано
-
-
-Дискваліфікувати постачальника
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and award number
-  ...      [Description] Find tender using uaid, create data dict with unsuccessful status and call patch_award
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${reply}
-
-
-Скасування рішення кваліфікаційної комісії
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and award number
-  ...      [Description] Find tender using uaid, create data dict with unsuccessful status and call patch_award
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${reply}
-
-##############################################################################
-#             Limited procurement
-##############################################################################
-
-Створити постачальника, додати документацію і підтвердити його
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and supplier data
-  ...      Find tender using uaid and call create_award, add documentation to that award and update his status to active
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${supplier_data}  ${document}
-  Fail  Дане ключове слово не реалізовано
-
-
-Скасувати закупівлю
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, cancellation reason,
-  ...      document and new description of document
-  ...      [Description] Find tender using uaid, set cancellation reason, get data from cancel_tender
-  ...      and call create_cancellation
-  ...      After that add document to cancellation and change description of document
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${cancellation_reason}  ${document}  ${new_description}
-  Fail  Дане ключове слово не реалізовано
-
-
-Завантажити документацію до запиту на скасування
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, cancellation id and document to upload
-  ...      [Description] Find tender using uaid, and call upload_cancellation_document
-  ...      [Return] ID of added document
-  [Arguments]  ${username}  ${tender_uaid}  ${cancellation_id}  ${document}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${doc_reply.data.id}
-
-
-Змінити опис документа в скасуванні
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, cancellation id, document id and new description of document
-  ...      [Description] Find tender using uaid, create dict with data about description and call
-  ...      patch_cancellation_document
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${cancellation_id}  ${document_id}  ${new_description}
-  Fail  Дане ключове слово не реалізовано
-
-
-Завантажити нову версію документа до запиту на скасування
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, cancallation number and cancellation document number
-  ...      Find tender using uaid, create fake documentation and call update_cancellation_document
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${cancel_num}  ${doc_num}
-  Fail  Дане ключове слово не реалізовано
-
-
-Підтвердити скасування закупівлі
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, cancellation number
-  ...      Find tender using uaid, get cancellation test_confirmation data and call patch_cancellation
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${cancel_id}
-  Fail  Дане ключове слово не реалізовано
-
-
-Підтвердити підписання контракту
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, contract number
-  ...      Find tender using uaid, get contract test_confirmation data and call patch_contract
-  ...      [Return] Nothing
-  [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
-  Fail  Дане ключове слово не реалізовано
-
-##############################################################################
-#             OpenUA procedure
-##############################################################################
-
-Підтвердити кваліфікацію
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and qualification number
-  ...      [Description] Find tender using uaid, create data dict with active status and call patch_qualification
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${reply}
-
-
-Відхилити кваліфікацію
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and qualification number
-  ...      [Description] Find tender using uaid, create data dict with unsuccessful status and call patch_qualification
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${reply}
-
-
-Завантажити документ у кваліфікацію
-  [Documentation]
-  ...      [Arguments] Username, tender uaid, qualification number and document to upload
-  ...      [Description] Find tender using uaid,  and call upload_qualification_document
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${document}  ${tender_uaid}  ${qualification_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${doc_reply}
-
-
-Скасувати кваліфікацію
-  [Documentation]
-  ...      [Arguments] Username, tender uaid and qualification number
-  ...      [Description] Find tender using uaid, create data dict with cancelled status and call patch_qualification
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${reply}
-
-
-Затвердити остаточне рішення кваліфікації
-  [Documentation]
-  ...      [Arguments] Username and tender uaid
-  ...
-  ...      [Description] Find tender using uaid and call patch_tender
-  ...
-  ...      [Return] Reply of API
-  [Arguments]  ${username}  ${tender_uaid}
-  Fail  Дане ключове слово не реалізовано
-  [Return]  ${reply}
+    [Arguments]  @{ARGUMENTS}
+    Selenium2Library.Switch Browser       ${ARGUMENTS[0]}
+    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Sleep   60
+    reload page
+    ${result}=       get text  id=aPosition_auctionUrl
+    [return]   ${result}
