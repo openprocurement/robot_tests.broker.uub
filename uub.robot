@@ -19,8 +19,8 @@ ${locator.enquiryPeriod.endDate}                                id=tdtpPosition_
 ${locator.tenderPeriod.startDate}                               id=tdtpPosition_tenderPeriod_startDate_Date
 ${locator.tenderPeriod.endDate}                                 id=tdtpPosition_tenderPeriod_endDate_Date
 ${locator.tenderId}                                             id=tPosition_tenderID
-${locator.procuringEntity.name}                                 id=tw_Org_0_PE_identifier_legalName
-
+${locator.procuringEntity.name}                                 id=tew_Org_0_PE_name
+    
 
 ${locator.items[0].quantity}                                    id=tew_item_0_quantity
 ${locator.items[0].description}                                 id=tew_item_0_description
@@ -37,7 +37,7 @@ ${locator.items[0].deliveryDate.endDate}                        id=tdtpw_item_0_
 ${locator.items[0].classification.scheme}                       id=nw_item_0_classification_id
 ${locator.items[0].classification.id}                           id=tew_item_0_classification_id
 ${locator.items[0].classification.description}                  id=tw_item_0_classification_description
-${locator.items[0].additionalClassifications[0].scheme}         id=nw_item_0_additionalClassifications_id
+${locator.items[0].additionalClassifications[0].scheme}         id=nw_item_0_additionalClassifications_id 
 ${locator.items[0].additionalClassifications[0].id}             id=tew_item_0_additionalClassifications_id
 ${locator.items[0].additionalClassifications[0].description}    id=tw_item_0_additionalClassifications_description
 
@@ -80,10 +80,11 @@ Login
 
     ${title}=                Get From Dictionary         ${ARGUMENTS[1].data}             title
     ${description}=          Get From Dictionary         ${ARGUMENTS[1].data}             description
+    ${procuringEntity_name}=  Get From Dictionary  ${ARGUMENTS[1].data.procuringEntity}  name
     ${items}=                Get From Dictionary         ${ARGUMENTS[1].data}             items
     ${budget}=               get_budget                  ${ARGUMENTS[1]}
-    ${step_rate}=            get_step_rate               ${ARGUMENTS[1]}
-
+    ${step_rate}=            get_step_rate               ${ARGUMENTS[1]}       
+    
     ${currency}=                 Get From Dictionary         ${ARGUMENTS[1].data.value}       currency
     ${valueAddedTaxIncluded}=    Get From Dictionary         ${ARGUMENTS[1].data.value}       valueAddedTaxIncluded
 
@@ -103,20 +104,21 @@ Login
     ${dkpp_id}=              Get From Dictionary         ${items[0].additionalClassifications[0]}      id
     ${countryName}=          Get From Dictionary         ${items[0].deliveryAddress}      countryName
     ${postalCode}=           Get From Dictionary         ${items[0].deliveryAddress}      postalCode
-    ${region}=                   Get From Dictionary         ${items[0].deliveryAddress}      region
+    ${region}=               Get From Dictionary         ${items[0].deliveryAddress}      region
     ${locality}=             Get From Dictionary         ${items[0].deliveryAddress}      locality
     ${streetAddress}=        Get From Dictionary         ${items[0].deliveryAddress}      streetAddress
     ${latitude}=             get_latitude                ${items[0]}
     ${longitude}=            get_longitude               ${items[0]}
     ${quantity}=             get_quantity                ${items[0]}
-    ${delivery_end}=             get_delivery_date_uub      ${items[0]}
+    ${delivery_end}=         get_delivery_date_uub       ${items[0]}
 
 
     Selenium2Library.Switch Browser    ${ARGUMENTS[0]}
     Wait Until Page Contains Element     id=btAddTender    20
     Click Element                        id=btAddTender
     Wait Until Page Contains Element     id=ePosition_title       20
-    Input text                           id=ePosition_title                    ${title}
+	Input text							 id=ew_Org_0_PE_name               ${procuringEntity_name}
+    Input text                           id=ePosition_title                ${title}
     Input text                           id=ePosition_description          ${description}
     Input text             id=ePosition_value_amount                       ${budget}
     Click Element          id=cbPosition_value_valueAddedTaxIncluded
@@ -133,7 +135,7 @@ Login
     input text             id=ePosition_minimalStep_amount                         ${step_rate}
 
     Click Element          id=btn_items_add
-     Sleep   1
+     Sleep   2
     Input text        id=ew_item_0_description               ${descr_lot}
     Input text        id=ew_item_0_quantity                  ${quantity}
     Select From List By Value        id=slw_item_0_unit_code                ${unit}
@@ -157,7 +159,7 @@ Login
     Sleep   3
     Wait Until Element Contains  id=ValidateTips      Збереження виконано         10
     Click Element      id=btnPublic
-    Wait Until Element Contains  id=ValidateTips      Публікацію виконано         10
+    Wait Until Page Contains      Публікацію виконано         10
 
     ${tender_id}=     Get Text        id=tPosition_tenderID
     ${TENDER}=        Get Text        id=tPosition_tenderID
@@ -172,7 +174,7 @@ Login
   ...      ${ARGUMENTS[2]} ==  ${TENDER}
   Go to   ${USERS.users['${ARGUMENTS[0]}'].default_page}
   Click Element    id=btFilterNumber
-  Sleep  1
+  Wait Until Page Contains Element  id=ew_fv_0_value
   Input Text        id=ew_fv_0_value   ${ARGUMENTS[2]}
   Click Element     id=btnFilter
   Sleep  2
@@ -181,10 +183,10 @@ Login
   CLICK ELEMENT     id=btn_documents_add
   Choose File       xpath=(//*[@id='diagFileUpload']/table/tbody/tr/td[2]/div/form/input[2])   ${ARGUMENTS[1]}
   Sleep   2
-  Submit Form       upload_form
+  Reload Page
   Capture Page Screenshot
 
-Пошук тендера за ідентифікатором
+Пошук тендера по ідентифікатору
   [Arguments]  @{ARGUMENTS}
   [Documentation]
   ...      ${ARGUMENTS[0]} ==  username
@@ -192,19 +194,19 @@ Login
   Selenium2Library.Switch Browser    ${ARGUMENTS[0]}
   Go to   ${USERS.users['${ARGUMENTS[0]}'].default_page}
   Click Element    id=btFilterNumber
-  Sleep  1
+  Wait Until Page Contains Element  id=ew_fv_0_value
   Input Text      id=ew_fv_0_value   ${ARGUMENTS[1]}
   Click Element    id=btnFilter
   Sleep  2
-  CLICK ELEMENT    xpath=(//a[contains(@class, 'tender_rec')])
+  CLICK ELEMENT    xpath=(//a[contains(@class, 'tender_rec')]) 
   sleep  2
   Capture Page Screenshot
 
 Перейти до сторінки запитань
-  Wait Until Page Contains Element   id=questions_ref
+  Wait Until Page Contains Element   id=questions_ref 
   Click Element     id=questions_ref
   Sleep   1
-
+  
 Задати питання
   [Arguments]  @{ARGUMENTS}
   [Documentation]
@@ -213,8 +215,8 @@ Login
   ...      ${ARGUMENTS[2]} ==  questionId
   ${title}=        Get From Dictionary  ${ARGUMENTS[2].data}  title
   ${description}=  Get From Dictionary  ${ARGUMENTS[2].data}  description
-  Перейти до сторінки запитань
-  Click Element     id=btn_add
+  Wait Until Page Contains Element   id=btn_question 
+  Click Element     id=btn_question
   Sleep   1
   Input text          id=e_title                 ${title}
   Input text          id=e_description           ${description}
@@ -228,7 +230,7 @@ Login
     ...      ${ARGUMENTS[0]} = username
     ...      ${ARGUMENTS[1]} = ${TENDER_UAID}
     Selenium2Library.Switch Browser    ${ARGUMENTS[0]}
-    Пошук тендера за ідентифікатором    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
+    uub.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}    ${ARGUMENTS[1]}
 
 Отримати інформацію із тендера
   [Arguments]  @{ARGUMENTS}
@@ -259,7 +261,7 @@ Login
 
 Отримати інформацію про minimalStep.amount
   ${return_value}=   Отримати тест із поля і показати на сторінці   minimalStep.amount
-  ${return_value}=    convert to number    ${return_value.replace(',', '.')[:5]}
+  ${return_value}=   convert to number   ${return_value.replace(' ', '').replace(',', '.')}
   [return]   ${return_value}
 
 Внести зміни в тендер
@@ -273,7 +275,7 @@ Login
   Wait Until Page Contains Element   ${locator.edit.${ARGUMENTS[2]}}   5
   Input Text       ${locator.edit.${ARGUMENTS[2]}}   ${ARGUMENTS[3]}
   Click Element      id=btnPublic
-  Wait Until Element Contains  id=ValidateTips      Публікацію виконано        5
+  Wait Until Page Contains      Публікацію виконано        5
   Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
   ${result_field}=  Get Value   ${locator.edit.${ARGUMENTS[2]}}
   Should Be Equal   ${result_field}   ${ARGUMENTS[3]}
@@ -281,7 +283,7 @@ Login
 
 Отримати інформацію про items[0].quantity
   ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].quantity
-  ${return_value}=    Convert To Number   ${return_value.split(' ')[0]}
+  ${return_value}=    Convert To Number   ${return_value.replace(' ', '').replace(',', '.')}
   [return]  ${return_value}
 
 Отримати інформацію про items[0].unit.code
@@ -306,16 +308,16 @@ Login
 
 Отримати інформацію про procuringEntity.name
   ${return_value}=   Отримати тест із поля і показати на сторінці   procuringEntity.name
-   Fail  Поле заповнюється за реєстраційною карткою Учасника
+  [return]  ${return_value}
 
 Отримати інформацію про items[0].deliveryLocation.latitude
   ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].deliveryLocation.latitude
-  ${return_value}=   convert to number   ${return_value.replace(' ', '').replace(',', '.')}
+  ${return_value}=   Convert To Number   ${return_value}
   [return]  ${return_value}
 
 Отримати інформацію про items[0].deliveryLocation.longitude
   ${return_value}=   Отримати тест із поля і показати на сторінці   items[0].deliveryLocation.longitude
-  ${return_value}=   convert to number    ${return_value.replace(' ', '').replace(',', '.')}
+  ${return_value}=   Convert To Number   ${return_value}
   [return]  ${return_value}
 
 Отримати інформацію про tenderPeriod.startDate
@@ -393,12 +395,12 @@ Login
   [return]   ${return_value}
 
 Отримати інформацію про items[0].deliveryDate.endDate
-  ${return_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryDate.endDate
+  ${date_value}=   Отримати тест із поля і показати на сторінці  items[0].deliveryDate.endDate
+  ${return_value}=    convert_delivery_date_uub    ${date_value}
   [return]  ${return_value}
 
 Отримати інформацію про questions[0].title
-  Click Element                       id=questions_ref
-  sleep   2
+  Перейти до сторінки запитань
   ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].title
   [return]  ${return_value}
 
@@ -408,9 +410,11 @@ Login
 
 Отримати інформацію про questions[0].date
   ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].date
+  ${return_value}=   convert_date_time_uub_to_iso    ${return_value}
   [return]  ${return_value}
 
 Отримати інформацію про questions[0].answer
+  Перейти до сторінки запитань
   ${return_value}=   Отримати тест із поля і показати на сторінці   questions[0].answer
   [return]  ${return_value}
 
@@ -490,23 +494,18 @@ Login
     Wait Until Page Contains Element          id=btn_documents_add    5
     CLICK ELEMENT     id=btn_documents_add
     Choose File       xpath=(//*[@id='diagFileUpload']/table/tbody/tr/td[2]/div/form/input[2])   ${ARGUMENTS[1]}
-    Sleep   2
-    Submit Form       upload_form
+
 
 Змінити документ в ставці
     [Arguments]  @{ARGUMENTS}
     [Documentation]
     ...    ${ARGUMENTS[0]} ==  username
     ...    ${ARGUMENTS[1]} ==  file
-    ...    ${ARGUMENTS[2]} ==  tenderId
-    Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[2]}
-    Wait Until Page Contains Element   id=btnShowBid    5
-    Click Element       id=btnShowBid
+    ...    ${ARGUMENTS[2]} ==  bidId
+    Reload Page
     Sleep   1
     CLICK ELEMENT     css=.bt_ReUpload:first-child
     Choose File       xpath=(//*[@id='diagFileUpload']/table/tbody/tr/td[2]/div/form/input[2])   ${ARGUMENTS[1]}
-    Sleep   2
-    Submit Form       upload_form
 
 Отримати інформацію про bids
     [Arguments]  @{ARGUMENTS}
@@ -517,16 +516,12 @@ Login
     [Arguments]  @{ARGUMENTS}
     Selenium2Library.Switch Browser       ${ARGUMENTS[0]}
     Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
-    Sleep   60
-    reload page
-    ${result} =    get text    id=aPosition_auctionUrl
+    ${result} =   Get Text  id=aPosition_auctionUrl
     [return]   ${result}
 
 Отримати посилання на аукціон для учасника
     [Arguments]  @{ARGUMENTS}
     Selenium2Library.Switch Browser       ${ARGUMENTS[0]}
     Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
-    Sleep   60
-    reload page
-    ${result}=       get text  id=aPosition_auctionUrl
+    ${result}=    Get Text  id=aPosition_auctionUrl
     [return]   ${result}
