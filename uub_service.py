@@ -97,3 +97,5 @@ def procuringEntity_name_uub(initial_tender_data):
     return initial_tender_data
 
 
+
+

@@ -516,6 +516,8 @@ Login
     [Arguments]  @{ARGUMENTS}
     Selenium2Library.Switch Browser       ${ARGUMENTS[0]}
     Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Wait Until Page Contains Element   id=aPosition_auctionUrl    5
+    Sleep   5
     ${result} =   Get Text  id=aPosition_auctionUrl
     [return]   ${result}
 
@@ -523,5 +525,14 @@ Login
     [Arguments]  @{ARGUMENTS}
     Selenium2Library.Switch Browser       ${ARGUMENTS[0]}
     Викликати для учасника  ${ARGUMENTS[0]}  Оновити сторінку з тендером  ${ARGUMENTS[1]}
+    Wait Until Page Contains Element   id=aPosition_auctionUrl    5
+    Sleep   5
     ${result}=    Get Text  id=aPosition_auctionUrl
     [return]   ${result}
+
+Отримати інформацію про status
+  Reload Page
+  Sleep   5
+  ${return_value}=   Get Text   id=tPosition_status
+  [return]  ${return_value}
+
