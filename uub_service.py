@@ -74,34 +74,28 @@ def return_delivery_endDate(initial_tender_data, input_date):
 def convert_delivery_date_uub(isodate):
     return datetime.strptime(isodate, '%d.%m.%Y').date().isoformat()
 
-
 def convert_uub_date_to_iso(v_date, v_time):
     full_value = v_date+" "+v_time
     value_iso = datetime.strptime(full_value, "%d.%m.%Y %H:%M").isoformat()
     return value_iso
 
+def convert_date_time_uub_to_iso(v_date_time):
+    value_iso = datetime.strptime(v_date_time, "%d.%m.%Y %H:%M").isoformat()
+    return value_iso
+
+
 def get_scheme_uub(f_value):
     return f_value.split(' ')[1]
-
 
 def convert_date_to_uub_tender_enddate(isodate):
     second_date = isodate.split(' - ')[1]
     second_iso = datetime.strptime(second_date, "%d.%m.%y %H:%M").isoformat()
     return second_iso
 
-
 def procuringEntity_name_uub(initial_tender_data):
     initial_tender_data.data.procuringEntity['name'] = u"Test_company_from_Prozorro"
     return initial_tender_data
 
 
-def convert_uub_string_to_common_string(string):
-    return {
-        u"Украина": u"Україна",
-        u"Киевская область": u"м. Київ",
-        u"килограммы": u"кілограм",
-        u"кг.": u"кілограм",
-        u"грн.": u"UAH",
-        u" з ПДВ": True,
-        u"Картонки": u"Картонні коробки",
-    }.get(string, string)
+
+
