@@ -81,11 +81,6 @@ ${locator.contracts.status}  css=.contract_status
   [Arguments]  ${username}  ${tender_data}  ${role_name}
   [Return]  ${tender_data}
 
-Підготувати дані для оголошення тендера користувачем
-  [Arguments]  ${username}  ${tender_data}  ${role_name}
-  [Documentation]  Відключити створення тендеру в тестовому режимі
-  [Return]  ${tender_data}
-
 Login
   [Arguments]  ${username}
   Input text  id=eLogin  ${USERS.users['${username}'].login}
@@ -136,9 +131,9 @@ Login
   Click Element  id=lcbPosition_value_valueAddedTaxIncluded
   Input text  id=dtpPosition_auctionPeriod_startDate_Date  ${start_day_auction}
   Input text  id=ePosition_auctionPeriod_startDate_Time  ${start_time_auction}
-  input text  id=ePosition_minimalStep_amount  ${step_rate}
-  input text  id=ePosition_guarantee_percent  5
-  input text  id=ePosition_quick_value  720
+  Input text  id=ePosition_minimalStep_amount  ${step_rate}
+  Input text  id=ePosition_guarantee_percent  5
+  Input text  id=ePosition_quick_value  360
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${Items_length}=  Get Length  ${items}
   :FOR  ${index}  IN RANGE  ${Items_length}
@@ -202,8 +197,9 @@ Login
   Click Element  id=cancels_ref
   Wait Until Element Contains  id=records_shown  Y
 
-Задати питання
+Задати запитання на тендер
   [Arguments]  ${username}  ${tender_uaid}  ${question}
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${title}=  Get From Dictionary  ${question.data}  title
   ${description}=  Get From Dictionary  ${question.data}  description
   Wait Until Page Contains Element  xpath=(//*[@id='btn_question' and not(contains(@style,'display: none'))])
@@ -290,7 +286,7 @@ Login
 
 Отримати інформацію про dgfDecisionDate
   ${date_value}=  Отримати текст із поля і показати на сторінці  dgfDecisionDate
-  ${return_value}=  uub_service.convert_date  ${date_value}
+  ${return_value}=  convert_date  ${date_value}
   [return]  ${return_value}
 
 Отримати інформацію про tenderAttempts
@@ -445,7 +441,7 @@ Login
 
 Отримати інформацію про items[0].deliveryDate.endDate
   ${date_value}=  Отримати текст із поля і показати на сторінці  items[0].deliveryDate.endDate
-  ${return_value}=  uub_service.convert_date  ${date_value}
+  ${return_value}=  convert_date  ${date_value}
   [return]  ${return_value}
 
 Отримати інформацію про questions[${index}].title
@@ -685,11 +681,6 @@ Login
   ...  ELSE IF  '${field_name}' == 'answer'  Get Text  xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')]) 
   ...  ELSE  Get Text  xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')]) 
   [return]  ${return_value}
-
-Задати запитання на тендер
-  [Arguments]  ${username}  ${tender_uaid}  ${question}
-  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Задати питання  ${username}  ${tender_uaid}  ${question}
 
 Задати запитання на предмет
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${question}
