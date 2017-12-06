@@ -72,3 +72,12 @@ def download_file(url, file_name, output_dir):
 
 def inc(value):
     return int(value) + 1
+
+def get_minNumberOfQualifiedBids(item):
+    return str(item.minNumberOfQualifiedBids)
+
+def convert_DMY_ISO(v_date):
+    time_zone = pytz.timezone('Europe/Kiev')
+    d_date = datetime.strptime(v_date, '%d.%m.%Y')
+    localized_date = time_zone.localize(d_date)
+    return localized_date.isoformat()

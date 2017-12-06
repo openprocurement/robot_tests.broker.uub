@@ -5,28 +5,26 @@ Library  Collections
 Library  uub_service.py
 
 *** Variables ***
-${locator.edit.title}  id=ePosition_title
 ${locator.edit.description}  id=ePosition_description
-${locator.edit.dgfID}  id=ePosition_dgfID
-${locator.edit.dgfDecisionID}  id=ePosition_dgfDecisionID
-${locator.edit.dgfDecisionDate}  id=dtpPosition_dgfDecisionDate
-${locator.edit.tenderAttempts}  id=slPosition_tenderAttempts
 ${locator.title}  id=tePosition_title
 ${locator.description}  id=tePosition_description
-${locator.minimalStep.amount}  id=tePosition_minimalStep_amount
-${locator.value.amount}  id=tePosition_value_amount
+${locator.edit.minimalStep.amount}  id=ePosition_minimalStep_amount
+${locator.edit.guarantee.amount}  id=ePosition_guarantee_amount
+${locator.edit.value.amount}  id=ePosition_value_amount
+${locator.minimalStep.amount}  id=tPosition_minimalStep_amount
+${locator.guarantee.amount}  id=tPosition_guarantee_amount
+${locator.value.amount}  id=tPosition_value_amount
 ${locator.value.valueAddedTaxIncluded}  id=cbPosition_value_valueAddedTaxIncluded
 ${locator.value.currency}  id=tslPosition_value_currency
 ${locator.auctionPeriod.startDate}  id=tdtpPosition_auctionPeriod_startDate_Date
 ${locator.enquiryPeriod.startDate}  id=tdtpPosition_enquiryPeriod_startDate_Date
 ${locator.enquiryPeriod.endDate}  id=tdtpPosition_enquiryPeriod_endDate_Date
-${locator.tenderPeriod.startDate}  id=tdtpPosition_tenderPeriod_startDate_Date
-${locator.tenderPeriod.endDate}  id=tdtpPosition_tenderPeriod_endDate_Date
+${locator.tenderPeriod.startDate}  id=tPosition_tenderPeriod_startDate_Date
+${locator.tenderPeriod.endDate}  id=tPosition_tenderPeriod_endDate_Date
 ${locator.tenderId}  id=tPosition_tenderID
 ${locator.procuringEntity.name}  id=tew_Org_0_PE_name
 ${locator.dgf}  id=tePosition_dgfID
-${locator.dgfDecisionID}  id=tePosition_dgfDecisionID
-${locator.dgfDecisionDate}  id=tdtpPosition_dgfDecisionDate
+${locator.minNumberOfQualifiedBids}  id=tPosition_minNumberOfQualifiedBids
 ${locator.eligibilityCriteria}  id=tPosition_eligibilityCriteria
 ${locator.tenderAttempts}  id=tPosition_tenderAttempts
 ${locator.procurementMethodType}  id=tPosition_procurementMethodType
@@ -40,23 +38,35 @@ ${locator.items[0].deliveryAddress.region}  id=tw_item_0_Address_short
 ${locator.items[0].deliveryAddress.locality}  id=tw_item_0_Address_short
 ${locator.items[0].deliveryAddress.streetAddress}  id=tw_item_0_Address_short
 ${locator.items[0].deliveryDate.endDate}  id=tdtpw_item_0_deliveryDate_endDate_Date
+${locator.items[0].contractPeriod.startDate}  id=tdtpw_item_0_contractPeriod_startDate_Date
+${locator.items[0].contractPeriod.endDate}  id=tdtpw_item_0_contractPeriod_endDate_Date
 ${locator.items[0].classification.scheme}  id=tw_item_0_classification_scheme
 ${locator.items[0].classification.id}  id=tew_item_0_classification_id
 ${locator.items[0].classification.description}  id=tw_item_0_classification_description
-${locator.items[0].additionalClassifications[0].scheme}  id=tw_item_0_additionalClassifications_description
-${locator.items[0].additionalClassifications[0].id}  id=tew_item_0_additionalClassifications_id
-${locator.items[0].additionalClassifications[0].description}  id=tw_item_0_additionalClassifications_description
+${locator.items[0].additionalClassifications.scheme}  id=tw_item_0_additionalClassifications_scheme
+${locator.items[0].additionalClassifications.id}  id=tew_item_0_additionalClassifications_id
+${locator.items[0].additionalClassifications.description}  id=tw_item_0_additionalClassifications_description
 ${locator.items[1].description}  id=tew_item_1_description
+${locator.items[1].contractPeriod.startDate}  id=tdtpw_item_1_contractPeriod_startDate_Date
+${locator.items[1].contractPeriod.endDate}  id=tdtpw_item_1_contractPeriod_endDate_Date
 ${locator.items[1].classification.id}  id=tew_item_1_classification_id
 ${locator.items[1].classification.description}  id=tw_item_1_classification_description
 ${locator.items[1].classification.scheme}  id=tw_item_1_classification_scheme
+${locator.items[1].additionalClassifications.scheme}  id=tw_item_0_additionalClassifications_scheme
+${locator.items[1].additionalClassifications.id}  id=tew_item_0_additionalClassifications_id
+${locator.items[1].additionalClassifications.description}  id=tw_item_0_additionalClassifications_description
 ${locator.items[1].unit.code}  id=tw_item_1_unit_code
 ${locator.items[1].unit.name}  id=tslw_item_1_unit_code
 ${locator.items[1].quantity}  id=tew_item_1_quantity
 ${locator.items[2].description}  id=tew_item_2_description
+${locator.items[2].contractPeriod.startDate}  id=tdtpw_item_2_contractPeriod_startDate_Date
+${locator.items[2].contractPeriod.endDate}  id=tdtpw_item_2_contractPeriod_endDate_Date
 ${locator.items[2].classification.id}  id=tew_item_2_classification_id
 ${locator.items[2].classification.description}  id=tw_item_2_classification_description
 ${locator.items[2].classification.scheme}  id=tw_item_2_classification_scheme
+${locator.items[2].additionalClassifications.scheme}  id=tw_item_0_additionalClassifications_scheme
+${locator.items[2].additionalClassifications.id}  id=tew_item_0_additionalClassifications_id
+${locator.items[2].additionalClassifications.description}  id=tw_item_0_additionalClassifications_description
 ${locator.items[2].unit.code}  id=tw_item_2_unit_code
 ${locator.items[2].unit.name}  id=tslw_item_2_unit_code
 ${locator.items[2].quantity}  id=tew_item_2_quantity
@@ -71,14 +81,20 @@ ${locator.contracts.status}  css=.contract_status
 *** Keywords ***
 Підготувати клієнт для користувача
   [Arguments]  ${username}
-  [Documentation]  Відкрити брaвзер, створити обєкт api wrapper, тощо
-  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
+  ${alias}=   Catenate   SEPARATOR=   role_  ${username}
+  Set Global Variable   ${BROWSER_ALIAS}   ${alias}
+  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${BROWSER_ALIAS}
   Set Window Size  @{USERS.users['${username}'].size}
   Set Window Position  @{USERS.users['${username}'].position}
   Run Keyword If  '${username}' != 'uub_Viewer'  Login  ${username}
 
 Підготувати дані для оголошення тендера
   [Arguments]  ${username}  ${tender_data}  ${role_name}
+  [Return]  ${tender_data}
+
+Підготувати дані для оголошення тендера користувачем
+  [Arguments]  ${username}  ${tender_data}  ${role_name}
+  [Documentation]  Відключити створення тендеру в тестовому режимі
   [Return]  ${tender_data}
 
 Login
@@ -98,51 +114,47 @@ Login
   Set Global Variable  ${TENDER_INIT_DATA_LIST}  ${tender_data}
   ${title}=  Get From Dictionary  ${tender_data.data}  title
   ${dgf}=  Get From Dictionary  ${tender_data.data}  dgfID
-  ${dgfDecisionDate}=  convert_ISO_DMY  ${tender_data.data.dgfDecisionDate}
-  ${dgfDecisionID}=  Get From Dictionary  ${tender_data.data}  dgfDecisionID
   ${tenderAttempts}=  get_tenderAttempts  ${tender_data.data}
+  ${minNumberOfQualifiedBids}=  get_minNumberOfQualifiedBids  ${tender_data.data}
   ${description}=  Get From Dictionary  ${tender_data.data}  description
   ${procuringEntity_name}=  Get From Dictionary  ${tender_data.data.procuringEntity}  name
   ${items}=  Get From Dictionary  ${tender_data.data}  items
-  ${budget}=  get_budget  ${tender_data}
-  ${step_rate}=  get_step_rate  ${tender_data}
+  ${budget}=  get_str  ${tender_data.data.value.amount}
+  ${minimalStep}=  get_str  ${tender_data.data.minimalStep.amount}
+  ${guarantee}=  get_str  ${tender_data.data.guarantee.amount}
   ${currency}=  Get From Dictionary  ${tender_data.data.value}  currency
   ${valueAddedTaxIncluded}=  Get From Dictionary  ${tender_data.data.value}  valueAddedTaxIncluded
   ${start_day_auction}=  get_tender_dates  ${tender_data}  StartDate
   ${start_time_auction}=  get_tender_dates  ${tender_data}  StartTime
-  ${item0}=  Get From List  ${items}  0
-  ${descr_lot}=  Get From Dictionary  ${item0}  description
-  ${unit}=  Get From Dictionary  ${items[0].unit}  code
-  ${cav_id}=  Get From Dictionary  ${items[0].classification}  id
-  ${quantity}=  get_quantity  ${items[0]}
-  Switch Browser  ${username}
+  Switch Browser  ${BROWSER_ALIAS}
   Wait Until Page Contains Element  id=btAddTender  20
   Click Element  id=btAddTender
   Wait Until Page Contains Element  id=ePosition_title  20
+  Run Keyword If  '${items[0].additionalClassifications[0].id}' == 'PA01-7'
+  ...  Select From List By Value  id=slPosition_tenderType  rent
+  ...  ELSE  Select From List By Value  id=slPosition_tenderType  sell
   Select From List By Value  id=slPosition_procurementMethodType  ${tender_data.data.procurementMethodType}
   Input text  id=ew_Org_0_PE_name  ${procuringEntity_name}
   Input text  id=ePosition_title  ${title}
   Input text  id=ePosition_description  ${description}
   Input text  id=ePosition_dgfID  ${dgf}
-  Input text  id=ePosition_dgfDecisionID  ${dgfDecisionID}
-  Input text  id=dtpPosition_dgfDecisionDate  ${dgfDecisionDate}
   Select From List By Value  id=slPosition_tenderAttempts  ${tenderAttempts}
+  Select From List By Value  id=slPosition_minNumberOfQualifiedBids  ${minNumberOfQualifiedBids}
   Input text  id=ePosition_value_amount  ${budget}
   Click Element  id=lcbPosition_value_valueAddedTaxIncluded
   Input text  id=dtpPosition_auctionPeriod_startDate_Date  ${start_day_auction}
   Input text  id=ePosition_auctionPeriod_startDate_Time  ${start_time_auction}
-  Input text  id=ePosition_minimalStep_amount  ${step_rate}
-  Input text  id=ePosition_guarantee_percent  5
-  Input text  id=ePosition_quick_value  360
+  Input text  id=ePosition_minimalStep_amount  ${minimalStep}
+  Input text  id=ePosition_guarantee_amount  ${guarantee}
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${Items_length}=  Get Length  ${items}
   :FOR  ${index}  IN RANGE  ${Items_length}
-  \	  Click Element  id=btn_items_add
+  \	 Click Element  id=btn_items_add
   \  Додати предмет  ${items[${index}]}  ${index}
   Click Element  id=btnSend
-  Wait Until Element Contains  id=ValidateTips  Збереження виконано  10
+  Wait Until Element Contains  id=ValidateTips  Збереження виконано
   Click Element  id=btnPublic
-  Wait Until Page Contains  Публікацію виконано  10
+  Wait Until Page Contains  Публікацію виконано
   ${tender_id}=  Get Text  id=tPosition_tenderID
   ${TENDER}=  Get Text  id=tPosition_tenderID
   log to console  ${TENDER}
@@ -152,11 +164,20 @@ Login
   [Arguments]  ${item}  ${index}
   Wait Until Page Contains Element  id=ew_item_${index}_description
   Input text  id=ew_item_${index}_description  ${item.description}
-  Input text  id=ew_item_${index}_quantity  ${item.quantity}
+  ${quantity}=  get_str  ${item.quantity}
+  Input text  id=ew_item_${index}_quantity  ${quantity}
   Select From List By Value  id=slw_item_${index}_unit_code  ${item.unit.code}
+  Select From List By Value  id=slw_item_${index}_classification_scheme  ${item.classification.scheme}
   Input text  id=ew_item_${index}_classification_id  ${item.classification.id}
   Wait Until Page Contains Element  xpath=(//ul[contains(@class, 'ui-autocomplete') and not(contains(@style,'display: none'))]//li//a)
   Click Element  xpath=(//ul[contains(@class, 'ui-autocomplete') and not(contains(@style,'display: none'))]//li//a)
+  Input text  id=ew_item_${index}_additionalClassifications_id  ${item.additionalClassifications[0].id}
+  Wait Until Page Contains Element  xpath=(//ul[contains(@class, 'ui-autocomplete') and not(contains(@style,'display: none'))]//li//a)
+  Click Element  xpath=(//ul[contains(@class, 'ui-autocomplete') and not(contains(@style,'display: none'))]//li//a)
+  ${aDate}=  convert_ISO_DMY  ${item.contractPeriod.startDate}
+  Input text  id=dtpw_item_${index}_contractPeriod_startDate_Date  ${aDate}
+  ${aDate}=  convert_ISO_DMY  ${item.contractPeriod.endDate}
+  Input text  id=dtpw_item_${index}_contractPeriod_endDate_Date  ${aDate}
   Input text  id=ew_item_${index}_address_countryName  ${item.deliveryAddress.countryName}
   Input text  id=ew_item_${index}_address_postalCode  ${item.deliveryAddress.postalCode}
   Input text  id=ew_item_${index}_address_region  ${item.deliveryAddress.region}
@@ -176,11 +197,10 @@ Login
 
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}
-  Switch Browser  ${username}
+  Switch Browser  ${BROWSER_ALIAS}
   Go to  ${USERS.users['${username}'].default_page}
+  Wait Until Page Contains Element  id=btnFilter
   Wait Until Element Contains  id=records_shown  Y
-  Click Element  id=btFilterNumber
-  Wait Until Page Contains Element  id=ew_fv_0_value
   Input Text  id=ew_fv_0_value  ${tender_uaid}
   Click Element  id=btnFilter
   Wait Until Page Contains Element  id=tw_tr_10_title
@@ -196,19 +216,6 @@ Login
   Wait Until Page Contains Element  id=cancels_ref
   Click Element  id=cancels_ref
   Wait Until Element Contains  id=records_shown  Y
-
-Задати запитання на тендер
-  [Arguments]  ${username}  ${tender_uaid}  ${question}
-  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  ${title}=  Get From Dictionary  ${question.data}  title
-  ${description}=  Get From Dictionary  ${question.data}  description
-  Wait Until Page Contains Element  xpath=(//*[@id='btn_question' and not(contains(@style,'display: none'))])
-  Click Element  id=btn_question
-  Sleep  3
-  Input text  id=e_title  ${title}
-  Input text  id=e_description  ${description}
-  Click Element  id=SendQuestion
-  Wait Until Page Contains  Публікацію виконано
 
 Скасувати закупівлю
   [Arguments]  ${username}  ${tender_uaid}  ${reason}  ${filepath}  ${description}
@@ -227,7 +234,6 @@ Login
   Wait Until Element Contains  id=tFileMessage  Файл завантажено
   Reload Page
   Click Element  xpath=(//*[@id='pnList']/div[1]/div[2]/div[2]/span)
-  Wait Until Page Contains  Публікацію виконано
 
 Отримати інформацію про cancellations[0].status
   Перейти до сторінки відмін
@@ -243,19 +249,27 @@ Login
 
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tender_uaid}
-  Switch Browser  ${username}
   uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
 
 Отримати інформацію із предмету
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${field_name}
   ${return_value}=  Run Keyword If  '${field_name}' == 'description'
-  ...  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'description')]) 
-  ...  ELSE IF  '${field_name}' == 'classification.scheme'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'classification_scheme')]) 
-  ...  ELSE IF  '${field_name}' == 'classification.id'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'classification_id')]) 
-  ...  ELSE IF  '${field_name}' == 'classification.description'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'classification_description')]) 
-  ...  ELSE IF  '${field_name}' == 'unit.name'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'unit_name') and contains(@id, 'tslw_item')]) 
-  ...  ELSE IF  '${field_name}' == 'unit.code'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'unit_code') and contains(@id, 'tw_item')]) 
-  ...  ELSE IF  '${field_name}' == 'quantity'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'quantity')]) 
+  ...  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'description')]) 
+  ...  ELSE IF  '${field_name}' == 'classification.scheme'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'classification_scheme')]) 
+  ...  ELSE IF  '${field_name}' == 'classification.id'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'classification_id')]) 
+  ...  ELSE IF  '${field_name}' == 'classification.description'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'classification_description')]) 
+  ...  ELSE IF  '${field_name}' == 'additionalClassifications[0].scheme'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'additionalClassifications_scheme')]) 
+  ...  ELSE IF  '${field_name}' == 'additionalClassifications[0].id'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'additionalClassifications_id')]) 
+  ...  ELSE IF  '${field_name}' == 'additionalClassifications[0].description'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'additionalClassifications_description')]) 
+  ...  ELSE IF  '${field_name}' == 'contractPeriod.startDate'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'contractPeriod_startDate') and contains(@id, 'tdtpw_item')]) 
+  ...  ELSE IF  '${field_name}' == 'contractPeriod.endDate'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'contractPeriod_endDate') and contains(@id, 'tdtpw_item')]) 
+  ...  ELSE IF  '${field_name}' == 'unit.name'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'unit_name') and contains(@id, 'tslw_item')]) 
+  ...  ELSE IF  '${field_name}' == 'unit.code'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'unit_code') and contains(@id, 'tw_item')]) 
+  ...  ELSE IF  '${field_name}' == 'quantity'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')]//span[contains(@id, 'quantity')]) 
+  ${return_value}=  Run Keyword If  '${field_name}' == 'contractPeriod.startDate'  uub_service.convert_DMY_ISO  ${return_value}
+  ...  ELSE IF  '${field_name}' == 'contractPeriod.endDate'  uub_service.convert_DMY_ISO  ${return_value}
+  ...  ELSE IF  '${field_name}' == 'quantity'  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
+  ...  ELSE  Set Variable  ${return_value} 
   [return]  ${return_value}
 
 Отримати інформацію із тендера
@@ -280,17 +294,13 @@ Login
   ${return_value}=  Отримати текст із поля і показати на сторінці  dgf
   [return]  ${return_value}
 
-Отримати інформацію про dgfDecisionID
-  ${return_value}=  Отримати текст із поля і показати на сторінці  dgfDecisionID
-  [return]  ${return_value}
-
-Отримати інформацію про dgfDecisionDate
-  ${date_value}=  Отримати текст із поля і показати на сторінці  dgfDecisionDate
-  ${return_value}=  convert_date  ${date_value}
-  [return]  ${return_value}
-
 Отримати інформацію про tenderAttempts
   ${return_value}=  Отримати текст із поля і показати на сторінці  tenderAttempts
+  ${return_value}=  Convert To Integer  ${return_value}
+  [return]  ${return_value}
+
+Отримати інформацію про minNumberOfQualifiedBids
+  ${return_value}=  Отримати текст із поля і показати на сторінці  minNumberOfQualifiedBids
   ${return_value}=  Convert To Integer  ${return_value}
   [return]  ${return_value}
 
@@ -318,16 +328,23 @@ Login
   ${return_value}=  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
   [return]  ${return_value}
 
+Отримати інформацію про guarantee.amount
+  ${return_value}=  Отримати текст із поля і показати на сторінці  guarantee.amount
+  ${return_value}=  Convert To Number  ${return_value.replace(' ', '').replace(',', '.')}
+  [return]  ${return_value}
+
 Внести зміни в тендер
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   Wait Until Page Contains Element  ${locator.edit.${fieldname}}  5
-  ${app_value}=  Run Keyword If  '${field_name}' == 'tenderAttempts'  get_str  ${fieldvalue}
-  ...  ELSE IF  '${field_name}' == 'dgfDecisionDate'  convert_ISO_DMY  ${fieldvalue}
-  ...  ELSE  Set Variable  ${fieldvalue}
-  Run Keyword If  '${field_name}' == 'tenderAttempts'  Select From List By Value  id=slPosition_tenderAttempts  ${app_value}
-  ...  ELSE  Input Text  ${locator.edit.${fieldname}}  ${app_value}
+  ${fieldvalue}=  Run Keyword If  '${field_name}' == 'value.amount'  get_str  ${fieldvalue}
+  ...  ELSE IF  '${field_name}' == 'minimalStep.amount'  get_str  ${fieldvalue}
+  ...  ELSE IF  '${field_name}' == 'guarantee.amount'  get_str  ${fieldvalue}
+  ...  ELSE  Set Variable  ${fieldvalue} 
+  Input Text  ${locator.edit.${fieldname}}  ${fieldvalue}
   Click Element  id=btnPublic
-  Wait Until Page Contains  Публікацію виконано  5
+  Wait Until Page Contains  Публікацію виконано
+  ${result_field}=  Get Value  ${locator.edit.${fieldname}}
+  Should Be Equal  ${result_field}  ${fieldvalue}
 
 Отримати інформацію про items[${index}].quantity
   ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].quantity
@@ -346,6 +363,16 @@ Login
   ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].description
   [return]  ${return_value}
 
+Отримати інформацію про items[${index}].contractPeriod.startDate
+  ${date_value}=  Отримати текст із поля і показати на сторінці  items[${index}].contractPeriod.startDate
+  ${return_value}=  uub_service.convert_DMY_ISO  ${date_value}
+  [return]  ${return_value}
+
+Отримати інформацію про items[${index}].contractPeriod.endDate
+  ${date_value}=  Отримати текст із поля і показати на сторінці  items[${index}].contractPeriod.endDate
+  ${return_value}=  uub_service.convert_DMY_ISO  ${date_value}
+  [return]  ${return_value}
+
 Отримати інформацію про items[${index}].classification.id
   ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].classification.id
   [return]  ${return_value}
@@ -358,6 +385,18 @@ Login
   ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].classification.description
   [return]  ${return_value}
 
+Отримати інформацію про items[${index}].additionalClassifications[0].id
+  ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].additionalClassifications.id
+  [return]  ${return_value}
+
+Отримати інформацію про items[${index}].additionalClassifications[0].scheme
+  ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].additionalClassifications.scheme
+  [return]  ${return_value}
+
+Отримати інформацію про items[${index}].additionalClassifications[0].description
+  ${return_value}=  Отримати текст із поля і показати на сторінці  items[${index}].additionalClassifications.description
+
+
 Отримати інформацію про value.currency
   ${return_value}=  Get Selected List Value  slPosition_value_currency
   [return]  ${return_value}
@@ -367,6 +406,10 @@ Login
   [return]  ${return_value}
 
 Отримати інформацію про auctionID
+  ${return_value}=  Отримати текст із поля і показати на сторінці  tenderId
+  [return]  ${return_value}
+
+Отримати інформацію про tenderID
   ${return_value}=  Отримати текст із поля і показати на сторінці  tenderId
   [return]  ${return_value}
 
@@ -396,8 +439,8 @@ Login
   ${return_value}=  convert_date_to_iso  ${date_value}  ${time_value}
 
 Отримати інформацію про tenderPeriod.startDate
-  ${date_value}=  Get Text  id=tdtpPosition_tenderPeriod_startDate_Date
-  ${time_value}=  Get Text  id=tePosition_tenderPeriod_startDate_Time
+  ${date_value}=  Get Text  id=tPosition_tenderPeriod_startDate_Date
+  ${time_value}=  Get Text  id=tPosition_tenderPeriod_startDate_Time
   ${return_value}=  convert_date_to_iso  ${date_value}  ${time_value}
   [return]  ${return_value}
 
@@ -441,7 +484,7 @@ Login
 
 Отримати інформацію про items[0].deliveryDate.endDate
   ${date_value}=  Отримати текст із поля і показати на сторінці  items[0].deliveryDate.endDate
-  ${return_value}=  convert_date  ${date_value}
+  ${return_value}=  uub_service.convert_date  ${date_value}
   [return]  ${return_value}
 
 Отримати інформацію про questions[${index}].title
@@ -469,6 +512,54 @@ Login
   ${return_value}=  convert_date_time_to_iso  ${return_value}
   [return]  ${return_value}
 
+Отримати інформацію із запитання
+  [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Перейти до сторінки запитань
+  ${return_value}=  Run Keyword If  '${field_name}' == 'title'
+  ...  Get Text  xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')]) 
+  ...  ELSE IF  '${field_name}' == 'answer'  Get Text  xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')]) 
+  ...  ELSE  Get Text  xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')]) 
+  [return]  ${return_value}
+
+Задати запитання на тендер
+  [Arguments]  ${username}  ${tender_uaid}  ${question}
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Задати питання  ${username}  ${tender_uaid}  ${question}
+
+Задати питання
+  [Arguments]  ${username}  ${tender_uaid}  ${question}
+  ${title}=  Get From Dictionary  ${question.data}  title
+  ${description}=  Get From Dictionary  ${question.data}  description
+  Wait Until Page Contains Element  xpath=(//*[@id='btn_question' and not(contains(@style,'display: none'))])
+  Click Element  id=btn_question
+  Sleep  3
+  Input text  id=e_title  ${title}
+  Input text  id=e_description  ${description}
+  Click Element  id=SendQuestion
+  Wait Until Page Contains  Публікацію виконано
+
+Задати запитання на предмет
+  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${question}
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
+  Click Element  xpath=(//span[contains(@class, 'bt_item_question') and contains(@class, '${item_id}')])
+  Sleep  3
+  Input text  id=e_title  ${question.data.title}
+  Input text  id=e_description  ${question.data.description}
+  Click Element  id=SendQuestion
+  Wait Until Page Contains  Публікацію виконано
+
+Відповісти на запитання
+  [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${item_id}
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Перейти до сторінки запитань
+  Wait Until Page Contains Element  xpath=(//span[contains(@class, 'btAnswer') and contains(@class, '${item_id}')])
+  Click Element  xpath=(//span[contains(@class, 'btAnswer') and contains(@class, '${item_id}')])
+  Input Text  id=e_answer  ${answer_data.data.answer}
+  Click Element  id=SendAnswer
+  Wait Until Page Contains  Публікацію виконано
+
 Відповісти на питання
   [Arguments]  ${username}  ${tender_uaid}  ${question}  ${answer_data}
   ${answer}=  Get From Dictionary  ${answer_data.data}  answer
@@ -488,7 +579,8 @@ Login
   Wait Until Page Contains Element  xpath=(//*[@id='btnBid' and not(contains(@style,'display: none'))]) 
   Click Element  id=btnBid
   Wait Until Page Contains Element  xpath=(//*[@id='bid_load_status' and not(contains(@style,'display: none'))]) 
-  Input Text  id=eBid_price  ${amount}
+  Wait Until Page Contains Element          xpath=(//*[@id='eBid_price' and not(contains(@style,'display: none'))]) 
+  Input Text          id=eBid_price         ${amount}
   Run Keyword If  ${is_qualified}  Click Element  id=lcbBid_selfQualified
   Run Keyword If  ${is_eligible}  Click Element  id=lcbBid_selfEligible
   Click Element  id=btn_save
@@ -522,7 +614,7 @@ Login
   uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait Until Page Contains Element  xpath=(//*[@id='btnShowBid' and not(contains(@style,'display: none'))])
   Click Element  id=btnShowBid
-  Wait Until Page Contains Element  xpath=(//*[@id='eBid_price' and not(contains(@style,'display: none'))]) 
+  Wait Until Element Is Visible  xpath=(//*[@id='eBid_price']) 
   Input Text  id=eBid_price  ${amount}
   sleep  1
   Click Element  id=btn_public
@@ -575,7 +667,7 @@ Login
   ...      ${ARGUMENTS[0]} ==  ${username}
   ...      ${ARGUMENTS[1]} ==  ${tender_uaid}
   ...      ${ARGUMENTS[2]} ==  ${lot_id} for multilot request in auction stage
-  Switch Browser  ${username}
+  Switch Browser  ${BROWSER_ALIAS}
   Wait Until Page Contains Element  xpath=(//*[@id='aPosition_auctionUrl' and not(contains(@style,'display: none'))])
   ${result} =  Get Text  id=aPosition_auctionUrl
   [return]  ${result}
@@ -586,7 +678,7 @@ Login
   ...      ${ARGUMENTS[0]} ==  ${username}
   ...      ${ARGUMENTS[1]} ==  ${tender_uaid}
   ...      ${ARGUMENTS[2]} ==  ${lot_id} for multilot request in auction stage
-  Switch Browser  ${username}
+  Switch Browser  ${BROWSER_ALIAS}
   Wait Until Page Contains Element  xpath=(//*[@id='aPosition_auctionUrl' and not(contains(@style,'display: none'))])
   ${result}=  Get Text  id=aPosition_auctionUrl
   [return]  ${result}
@@ -656,42 +748,11 @@ Login
   ...  ELSE  Get Text  xpath=(//a[contains(@class, 'doc_title') and contains(@class, '${doc_id}')]) 
   [Return]  ${doc_value}
 
-Відповісти на запитання
-  [Arguments]  ${username}  ${tender_uaid}  ${answer_data}  ${item_id}
-  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Перейти до сторінки запитань
-  Wait Until Page Contains Element  xpath=(//span[contains(@class, 'btAnswer') and contains(@class, '${item_id}')])
-  Click Element  xpath=(//span[contains(@class, 'btAnswer') and contains(@class, '${item_id}')])
-  Input Text  id=e_answer  ${answer_data.data.answer}
-  Click Element  id=SendAnswer
-  Wait Until Page Contains  Публікацію виконано
-
 Отримати кількість предметів в тендері
   [Arguments]  ${username}  ${tender_uaid}
   uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${return_value}=  Get Matching Xpath Count  xpath=(//div[starts-with(@id, 'pn_w_item')])
   [return]  ${return_value}
-
-Отримати інформацію із запитання
-  [Arguments]  ${username}  ${tender_uaid}  ${question_id}  ${field_name}
-  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Перейти до сторінки запитань
-  ${return_value}=  Run Keyword If  '${field_name}' == 'title'
-  ...  Get Text  xpath=(//span[contains(@class, 'qa_title') and contains(@class, '${item_id}')]) 
-  ...  ELSE IF  '${field_name}' == 'answer'  Get Text  xpath=(//span[contains(@class, 'qa_answer') and contains(@class, '${item_id}')]) 
-  ...  ELSE  Get Text  xpath=(//span[contains(@class, 'qa_description') and contains(@class, '${item_id}')]) 
-  [return]  ${return_value}
-
-Задати запитання на предмет
-  [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${question}
-  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//span[contains(@class, 'bt_item_question') and contains(@class, '${item_id}')])
-  Sleep  3
-  Input text  id=e_title  ${question.data.title}
-  Input text  id=e_description  ${question.data.description}
-  Click Element  id=SendQuestion
-  Wait Until Page Contains  Публікацію виконано
 
 Додати предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item}
@@ -701,7 +762,7 @@ Login
   Run Keyword If  '${ItemAddButtonVisible}'=='PASS'  Run Keywords
   ...  Додати предмет  ${item}  ${index}
   ...  AND  Click Element  id=btnPublic
-  ...  AND  Wait Until Page Contains  Публікацію виконано  10
+  ...  AND  Wait Until Page Contains  Публікацію виконано
 
 Видалити предмет закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}
@@ -711,7 +772,7 @@ Login
   ...  Wait Until Page Contains Element  xpath=(//ul[contains(@class, 'bt_item_delete') and contains(@class, ${item_id})])
   ...  AND  Click Element  xpath=(//ul[contains(@class, 'bt_item_delete') and contains(@class, ${item_id})])
   ...  AND  Click Element  id=btnPublic
-  ...  AND  Wait Until Page Contains  Публікацію виконано  10
+  ...  AND  Wait Until Page Contains  Публікацію виконано
 
 Отримати кількість документів в тендері
   [Arguments]  ${username}  ${tender_uaid}
@@ -748,7 +809,6 @@ Login
   Wait Until Page Contains Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Cancel_button')])
   Sleep  1
   Click Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Cancel_button')])
-  Wait Until Page Contains  Публікацію виконано
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}
@@ -757,14 +817,16 @@ Login
   Wait Until Page Contains Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'award_button')])
   Sleep  1
   Click Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'award_button')])
-  Wait Until Page Contains  Публікацію виконано  10
+  Wait Until Page Contains  Публікацію виконано
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}  ${description}
+  uub.Оновити сторінку з тендером  ${tender_uaid}
   ${award_index}=  inc  ${award_index}
+  Wait Until Page Contains Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Reject_description')])
   Input text  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Reject_description')])  ${description}
   Click Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Reject_button')])
-  Wait Until Page Contains  Публікацію виконано  10
+  Wait Until Page Contains  Публікацію виконано
 
 Завантажити документ рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${award_index}
@@ -795,8 +857,8 @@ Login
 Завантажити угоду до тендера
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}  ${filepath}
   uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//div[contains(@class, 'contract_docs')]//span[contains(@class, 'add_document')])
+  Wait Until Page Contains Element  xpath=(//div[contains(@id, 'pn_doc_contract_')][1]//span[contains(@class, 'add_document')])
+  Click Element  xpath=(//div[contains(@id, 'pn_doc_contract_')][1]//span[contains(@class, 'add_document')])
   Select From List By Value  id=slFile_documentType  contractSigned
   Choose File  xpath=(//*[@id='upload_form']/input[2])  ${filepath}
   Sleep  2
@@ -807,12 +869,10 @@ Login
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
   ${file_path}  ${file_title}  ${file_content}=  create_fake_doc
-  Sleep  5
-  uub.Завантажити угоду до тендера  ${username}  ${tender_uaid}  1  ${filepath}
-  Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
-  Input text  xpath=(//*[@id='pnAwardList']/div[last()]//input[contains(@class, 'contractNumber')])  ${contract_num}
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//span[contains(@class, 'contract_register')])
-  Wait Until Page Contains  Публікацію виконано  10
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Wait Until Page Contains Element  xpath=(//div[contains(@id, 'pn_control_contract')][1]//span[contains(@class, 'contract_register')])
+  Click Element  xpath=(//div[contains(@id, 'pn_control_contract')][1]//span[contains(@class, 'contract_register')])
+  Wait Until Page Contains  Публікацію виконано
 
 Завантажити протокол аукціону в авард
   [Arguments]  ${username}  ${tender_uaid}  ${filepath}  ${award_index}
@@ -833,7 +893,7 @@ Login
   uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait Until Page Contains Element  xpath=(//*[@id='tPosition_status' and not(contains(@style,'display: none'))])
   Click Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'award_protocol_button')])
-  Wait Until Page Contains  Публікацію виконано  10
+  Wait Until Page Contains  Публікацію виконано
 
 Отримати інформацію про awards[${index}].status
   ${index}=  inc  ${index}
