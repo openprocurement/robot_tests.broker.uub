@@ -821,7 +821,7 @@ Login
 
 Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_index}  ${description}
-  uub.Оновити сторінку з тендером  ${tender_uaid}
+  uub.Оновити сторінку з тендером  ${username}  ${tender_uaid}
   ${award_index}=  inc  ${award_index}
   Wait Until Page Contains Element  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Reject_description')])
   Input text  xpath=(//*[@id='pnAwardList']/div[${award_index}]//*[contains(@class, 'Reject_description')])  ${description}
