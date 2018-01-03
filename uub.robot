@@ -249,6 +249,7 @@ Login
 
 Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}
+  Switch Browser  ${BROWSER_ALIAS}
   ${return_value}=  Run Keyword  Отримати інформацію про ${fieldname}
   [return]  ${return_value}
 
