@@ -14,21 +14,6 @@ def is_checked(locator):
     driver = get_webdriver()
     return driver.find_element_by_id(locator).is_selected()
 
-def get_str(value):
-    return str(value)
-
-def get_budget(initial_tender_data):
-    return str(initial_tender_data.data.value.amount)
-
-def get_step_rate(initial_tender_data):
-    return str(initial_tender_data.data.minimalStep.amount)
-
-def get_quantity(item):
-    return str(item.quantity)
-
-def get_tenderAttempts(item):
-    return str(item.tenderAttempts)
-
 def get_tender_dates(initial_tender_data, key):
     data_period = initial_tender_data.data.auctionPeriod
     start_dt = dateutil.parser.parse(data_period['startDate'])
@@ -66,6 +51,11 @@ def is_eligible(tender_data):
     if 'eligible' in tender_data['data']:
         return  tender_data['data']['eligible']
     return False
+
+def bid_value(tender_data):
+    if 'value' in tender_data['data']:
+        return  str(tender_data['data']['value']['amount'])
+    return ''
 
 def download_file(url, file_name, output_dir):
     urllib.urlretrieve(url, ('{}/{}'.format(output_dir, file_name)))
