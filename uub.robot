@@ -247,9 +247,15 @@ Login
   ...  ELSE IF  '${field_name}' == 'quantity'  Get Text  xpath=(//div[starts-with(@id, 'pn_w_item') and contains(@class, '${item_id}')////span[contains(@id, 'quantity')]) 
   [return]  ${return_value}
 
+Перейти на сторінку тендера
+  [Arguments]  ${username}  ${tender_uaid}  
+  ${present}=  Run Keyword And Return Status  Element Should Be Visible  id=tPosition_status
+  Run Keyword Unless  ${present}  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+
 Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}
-  Switch Browser  ${BROWSER_ALIAS}
+  Run Keyword If  '${fieldname}' == 'tenderPeriod.endDate'
+  ...  Перейти на сторінку тендера  ${username}  ${tender_uaid}
   ${return_value}=  Run Keyword  Отримати інформацію про ${fieldname}
   [return]  ${return_value}
 
@@ -602,9 +608,9 @@ Login
 Отримати посилання на аукціон для глядача
   [Arguments]  ${username}  @{arguments}
   [Documentation]
-  ...      ${ARGUMENTS[0]} ==  ${username}
-  ...      ${ARGUMENTS[1]} ==  ${tender_uaid}
-  ...      ${ARGUMENTS[2]} ==  ${lot_id} for multilot request in auction stage
+  ...  ${ARGUMENTS[0]} ==  ${username}
+  ...  ${ARGUMENTS[1]} ==  ${tender_uaid}
+  ...  ${ARGUMENTS[2]} ==  ${lot_id} for multilot request in auction stage
   Switch Browser  ${BROWSER_ALIAS}
   Wait Until Element Is Visible  xpath=(//*[@id='aPosition_auctionUrl'])
   ${result} =  Get Text  id=aPosition_auctionUrl
@@ -613,9 +619,9 @@ Login
 Отримати посилання на аукціон для учасника
   [Arguments]  ${username}  @{arguments}
   [Documentation]
-  ...      ${ARGUMENTS[0]} ==  ${username}
-  ...      ${ARGUMENTS[1]} ==  ${tender_uaid}
-  ...      ${ARGUMENTS[2]} ==  ${lot_id} for multilot request in auction stage
+  ...  ${ARGUMENTS[0]} ==  ${username}
+  ...  ${ARGUMENTS[1]} ==  ${tender_uaid}
+  ...  ${ARGUMENTS[2]} ==  ${lot_id} for multilot request in auction stage
   Switch Browser  ${BROWSER_ALIAS}
   Wait Until Element Is Visible  xpath=(//*[@id='aPosition_auctionUrl'])
   ${result}=  Get Text  id=aPosition_auctionUrl
@@ -807,11 +813,9 @@ Login
 Підтвердити підписання контракту
   [Arguments]  ${username}  ${tender_uaid}  ${contract_num}
   ${file_path}  ${file_title}  ${file_content}=  create_fake_doc
-  Sleep  5
-  uub.Завантажити угоду до тендера  ${username}  ${tender_uaid}  1  ${filepath}
+  uub.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Wait Until Page Contains Element  xpath=(//div[contains(@id, 'pn_control_contract')][1]//span[contains(@class, 'contract_register')])
-  Input text  xpath=(//*[@id='pnAwardList']/div[last()]//input[contains(@class, 'contractNumber')])  ${contract_num}
-  Click Element  xpath=(//*[@id='pnAwardList']/div[last()]//span[contains(@class, 'contract_register')])
+  Click Element  xpath=(//div[contains(@id, 'pn_control_contract')][1]//span[contains(@class, 'contract_register')])
   Wait Until Page Contains  Публікацію виконано
 
 Завантажити протокол аукціону в авард
