@@ -2,6 +2,7 @@
 import pytz
 import dateutil.parser
 import urllib
+import re
 
 from datetime import datetime
 from robot.libraries.BuiltIn import BuiltIn
@@ -40,6 +41,9 @@ def get_tender_dates(initial_tender_data, key):
 
 def convert_ISO_DMY(isodate):
     return dateutil.parser.parse(isodate).strftime("%d.%m.%Y")
+
+def convert_ISO_HM(isodate):
+    return dateutil.parser.parse(isodate).strftime("%H:%M")
 
 def convert_date(isodate):
     return datetime.strptime(isodate, '%d.%m.%Y').date().isoformat()
@@ -81,3 +85,14 @@ def convert_DMY_ISO(v_date):
     d_date = datetime.strptime(v_date, '%d.%m.%Y')
     localized_date = time_zone.localize(d_date)
     return localized_date.isoformat()
+
+def field_name(field):
+    return field.replace('.','_').replace('[','_').replace(']','_')
+
+def convert_iso8601Duration(duration):
+   if duration == u'P1M':
+    duration = u'P30D'
+   dayDuration = re.search('\d+D|$', duration).group()
+   if len(dayDuration) > 0:
+    dayDuration = dayDuration[:-1]
+   return dayDuration
